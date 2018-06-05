@@ -31,9 +31,10 @@ public:
     const Cell& operator[](size_t i) const      { return this->cells[i]; }
 
 
-    // --- Access cell by coordinates
-    Cell&       operator()(size_t, size_t);
-    const Cell& operator()(size_t, size_t) const;
+    // --- Access cell by coordinates,
+    // --- with wrap around correction
+    Cell&       operator()(int, int);
+    const Cell& operator()(int, int) const;
 
 
     // --- Iterators on cells

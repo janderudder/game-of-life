@@ -15,15 +15,10 @@ using std::endl;
 int main(int argc, char** argv)
 {
 	using namespace std::literals;
-	std::locale::global(std::locale("fr_FR.UTF-8"));
-	std::cout.imbue(std::locale());
-	std::boolalpha(std::cout);
-
 
     // Font
     auto mainFont = make_resource<sf::Font>("./resources/fonts/sansation.ttf");
-	
-    
+	    
     // Cells data
     World world(128);
 
@@ -127,6 +122,7 @@ int main(int argc, char** argv)
                 defaultView.setSize(static_cast<sf::Vector2f>(window.getSize()));
                 defaultView.setCenter(static_cast<sf::Vector2f>(window.getSize()) / 2.f);
                 quitForm.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
+                window.setMouseCursorGrabbed(false);
             }
 
 
@@ -157,19 +153,25 @@ int main(int argc, char** argv)
                     break;
 
                     case kAdd:
-                        if (refresh >= .250f)
+                        if (refresh > .125f)
                             refresh -= .125f;
-                        else
+                        
+                        else if (refresh > .025f)
                             refresh -= .025f;
 
-                        if (refresh == 0)
-                            refresh = .025f;
+                        else refresh -= .005f;
+
+                        if (refresh < .005f)
+                            refresh = .005f;
                     break;
                     case kSubtract:
-                        if (refresh < .125f)
-                            refresh += .025f;
-                        else 
-                            refresh += .125f;
+                        if (refresh < .025f)
+                            refresh += .005f;
+                        
+                        else if (refresh < .125)
+                            refresh += .25f;
+
+                        else refresh += .125f;
 
                         if ( refresh > 2.f )
                             refresh = 2.f;

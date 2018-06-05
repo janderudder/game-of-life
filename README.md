@@ -22,9 +22,9 @@ g++ ./**/*.cpp -std=c++14 -I/usr/local/include/ -I. -I./classes -o./build/automa
 
 
 ## A word
-This program needs a lot of polishing, code refactoring, debugging. The goal was to achieve a working "Game of Life" simulation, so it is published as is.
-There is an error in the implementation of the "infinite grid", which has an impact on the simulation. That bug will be corrected soon.
-Many thanks to SFML's contributors, it really is a great and fun library to use.
+This program needs refactoring and the addition of some features like a proper UI (and "app states", messaging between classes, some things like that).
+The primary goal was to achieve a working "Game of Life" simulation, that is up and running so it is published as is for now.
+Many thanks to SFML's contributors, it is really a great and fun library to use.
 
 
 ## License

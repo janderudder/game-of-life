@@ -1,6 +1,5 @@
 #include "data/World.hpp"
 #include <cstdint>
-#include "InfiniteIndex.hpp"
 using std::uint8_t;
 
 ////////////////////////////////////////////////////////////////
@@ -30,51 +29,47 @@ World(size_t squareWorldSideSize)
 void World::
 computeNextState()
 {
-    // Copy all world data
-    auto nextState ( this->cells );
-    
+    auto nextState(this->cells);    // Copy world data array    
     auto cellCount = this->cells.size();
 
-    /**
-     * We'll make range checks only in particular cases
-     */
-    for ( size_t cellN=0;  cellN < cellCount;  ++cellN )
+
+    for ( int h=0;  (size_t)h < this->height;  ++h )
+    for ( int w=0;  (size_t)w < this->width;  ++w )
     {
         uint8_t aliveNeighbors = 0;
 
         // Neighbors above the cell
-        auto n = InfiniteIndex(cellCount, static_cast<long>(cellN) - static_cast<long>(this->width + 1));
-
-        for (uint8_t i=0; i < 3; ++i) {
-            if (cells[n.toSize_t()].isAlive()) ++aliveNeighbors;
-            ++n;
+        for (int i=0; i < 3; ++i) {
+            if ( (*this)(w - 1 + i,   h - 1).isAlive() ) 
+                ++aliveNeighbors;
         }
 
         // To the left and right
-        n = cellN - 1;
-        if (cells[n.toSize_t()].isAlive()) ++aliveNeighbors;
-        n = cellN + 1;
-        if (cells[n.toSize_t()].isAlive()) ++aliveNeighbors;
+        if ( (*this)( w - 1,  h ).isAlive() )
+            ++aliveNeighbors;
+
+        if ( (*this)( w + 1,  h).isAlive() )
+            ++aliveNeighbors;
 
         // Line below the cell
-        n = cellN + this->width - 1;
-        for (uint8_t i=0; i < 3; ++i) {
-            if (cells[n.toSize_t()].isAlive()) ++aliveNeighbors;
-            ++n;
+        for (int i=0; i < 3; ++i) {
+            if ( (*this)(w - 1 + i,   h + 1).isAlive() ) 
+                ++aliveNeighbors;
         }
 
         // We got the number of alive neighbors,
         // determine the cell's next state.
+        size_t cell = this->width * h + w;
         if ( aliveNeighbors == 3 ) {
-            nextState[cellN].live();
+            nextState[cell].live();
         }
         else if ( aliveNeighbors != 2 ) {
-            nextState[cellN].die();
+            nextState[cell].die();
         }
 
         // Handle visited state -- this really should be optimized
-        if ( cells[cellN].isAlive() && !cells[cellN].wasVisited() )
-            nextState[cellN].visit();
+        if ( cells[cell].isAlive() && !cells[cell].wasVisited() )
+            nextState[cell].visit();
     }
 
     // Now that the new state is computed, make it the current one
@@ -102,15 +97,25 @@ getHeight() const {
 
 
 ////////////////////////////////////////////////////////////////
-//  CELL ACCESS BY COORDINATES
+//  CELL ACCESS BY COORDINATES, WITH WRAP AROUND CORRECTION
 ////////////////////////////////////////////////////////////////
 Cell&               World::
-operator()(size_t x, size_t y) {
+operator()(int x, int y) {
+    if ( x >= (int)this->width )
+        x -= (int)this->width;
+    else if ( x < 0 )
+        x += (int)this->width;
+
+    if ( y >= (int)this->height )
+        y -= (int)this->height;
+    else if ( y < 0 )
+        y += (int)this->height;
+
     return this->cells[this->width * y + x];
 }
 
 
 const Cell&         World::
-operator()(size_t x, size_t y) const {
+operator()(int x, int y) const {
     return (*this)(x, y);
 }
