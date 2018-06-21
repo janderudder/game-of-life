@@ -12,6 +12,7 @@
 #include "Camera.hpp"
 #include "helpers/keyb.hpp"
 #include "forms/QuitConfirm.hpp"
+#include "app/Cursor.hpp"
 using std::cout;
 using std::endl;
 
@@ -19,6 +20,14 @@ using std::endl;
 int main(int argc, char** argv)
 {
 	using namespace std::literals;
+
+
+    //////////////////////////////////////////////////////////
+    //  Window creation
+    //////////////////////////////////////////////////////////
+    sf::RenderWindow window(sf::VideoMode(640, 480), "Automaton", sf::Style::Default);
+    window.setFramerateLimit(50);
+
 
     // Font
     auto mainFont = make_resource<sf::Font>("./resources/fonts/sansation.ttf");
@@ -40,17 +49,15 @@ int main(int argc, char** argv)
     
 
     // Mouse & cursor
+    Cursor cursor(window);
+
     sf::Vector2i mousePos;
-    bool mouseViewMode = false;
-    bool cursorsAvailable = false;
     bool drawAuthorized = false;
-    sf::Cursor defaultCursor, crossCursor;
-    if ( crossCursor.loadFromSystem(sf::Cursor::Cross) )
-        cursorsAvailable = true;
+    
     
     // Clicked cell
     size_t clickedCellNumber = 0;
-    char   clickedCellState = 2;
+    char   clickedCellState = 2;    // 2 = not dead nor alive (0 nor 1)
 
 
     // Select cells rectangle
@@ -62,13 +69,6 @@ int main(int argc, char** argv)
     selectRect.setOrigin(makeVector(-selectRect.getOutlineThickness()));    
     sf::Vector2f selectRectStartPos;
     bool selectionStarted = false;
-    
-
-	//////////////////////////////////////////////////////////
-    //  Window creation
-    //////////////////////////////////////////////////////////
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Automaton", sf::Style::Default);
-    window.setFramerateLimit(50);
     
 
     // Forms
@@ -125,8 +125,12 @@ int main(int argc, char** argv)
                 camera.onWindowResize();
                 defaultView.setSize(static_cast<sf::Vector2f>(window.getSize()));
                 defaultView.setCenter(static_cast<sf::Vector2f>(window.getSize()) / 2.f);
+
+                // Forms
                 quitForm.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-                window.setMouseCursorGrabbed(false);
+
+                // Cursor
+                cursor.onWindowResize(window.getSize());
             }
 
 
@@ -190,36 +194,22 @@ int main(int argc, char** argv)
             else if ( event.type == sf::Event::MouseButtonPressed )
             {
                 if ( event.mouseButton.button == sf::Mouse::Middle ) {
-                    if ( cursorsAvailable )
-                        window.setMouseCursor(crossCursor);
-                    else
-                        window.setMouseCursorVisible(false);
-                    
-                    window.setMouseCursorGrabbed(true);
-                    mouseViewMode = true;
+                    cursor.setMode(Cursor::Crosshair);
                     mousePos = sf::Mouse::getPosition(window);
                 }
 
                 else if ( event.mouseButton.button == sf::Mouse::Left ) {
-                    // Prevent drawing cells while we move or resize the window
+                    // Prevent drawing cells while we move or resize the window, because when we click 
+                    // on window's sides or title bar, this event will not be fired.
                     drawAuthorized = true;
-                    window.setMouseCursorGrabbed(false);
                 }
             }
 
 
             else if ( event.type == sf::Event::MouseButtonReleased )
             {
-                if ( event.mouseButton.button == sf::Mouse::Middle )
-                {
-                    mouseViewMode = false;
-
-                    if ( cursorsAvailable )
-                        window.setMouseCursor(defaultCursor);
-                    else
-                        window.setMouseCursorVisible(true);
-
-                    window.setMouseCursorGrabbed(false);
+                if ( event.mouseButton.button == sf::Mouse::Middle ) {
+                    cursor.setMode(Cursor::Normal);
                 }
                 
                 else if ( event.mouseButton.button == sf::Mouse::Left ) {
@@ -276,10 +266,9 @@ int main(int argc, char** argv)
             //////////////////////////////////////////////////////////
             //  Mouse
             //////////////////////////////////////////////////////////
-            if ( mouseViewMode ) {
+            if ( cursor.getMode() == Cursor::Crosshair ) {
                 auto mnpos = sf::Mouse::getPosition(window);
-                camera.move(static_cast<sf::Vector2f>(mousePos - mnpos));
-                // camera.move(static_cast<sf::Vector2f>(mnpos - mousePos));
+                camera.move(static_cast<sf::Vector2f>(mnpos - mousePos));
                 sf::Mouse::setPosition(sf::Vector2i(window.getSize().x / 2, window.getSize().y / 2), window);
                 mousePos = sf::Mouse::getPosition(window);
             }
@@ -327,7 +316,7 @@ int main(int argc, char** argv)
             //////////////////////////////////////////////////////////
             //  Keyboard
             //////////////////////////////////////////////////////////
-            if ( !mouseViewMode )
+             if ( cursor.getMode() == Cursor::Normal )
             {
                 if ( keyb(kLShift) || keyb(kRShift) ) {
                     if ( keyb(kUp) )
@@ -360,15 +349,13 @@ int main(int argc, char** argv)
         } // -- live events end (window.hasFocus())
 
         else  {     // If window has lost focus, reset some stuff
-            if ( cursorsAvailable )
-                window.setMouseCursor(defaultCursor);
-            else
-                window.setMouseCursorVisible(true);
-            
-            window.setMouseCursorGrabbed(false);
-            mouseViewMode = false;
+            cursor.setMode(Cursor::Normal);            
             drawAuthorized = false;
         }
+
+        // Correct "mysterious" mouse grab bug
+        if ( cursor.getMode() != Cursor::Crosshair )
+            window.setMouseCursorGrabbed(false);
         
 
         // --- Data update
@@ -398,6 +385,7 @@ int main(int argc, char** argv)
           window.draw(selectRect);
         
         window.setView(defaultView);
+          window.draw(cursor);
           window.draw(quitForm);
 
         window.display();

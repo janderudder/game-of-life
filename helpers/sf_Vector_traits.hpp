@@ -1,7 +1,3 @@
-/* This source code file is subject to the terms of the MIT License.
- * If a copy of the MIT License was not distributed along this file,
- * you can obtain one at https://opensource.org/licenses/MIT .
- */
 #ifndef SF_VECTOR_TRAIT_HPP
 #define SF_VECTOR_TRAIT_HPP
 #include <SFML/System.hpp>
@@ -105,10 +101,6 @@ double distanceBetween(const sf::Vector2<T>& p1, const sf::Vector2<U>& p2)
                     + std::pow(static_cast<double>(p2.y) - static_cast<double>(p1.y), 2));
 }
 
-template <typename T, typename U>
-sf::Vector2<T> operator / (const sf::Vector2<T>& v1, const sf::Vector2<U>& v2) {
-    return sf::Vector2<T>(v1.x / static_cast<T>(v2.x), v1.y / static_cast<T>(v2.y));
-}
 
 template <typename T, typename U>
 sf::Vector2<T> operator * (const sf::Vector2<T>& v1, const sf::Vector2<U>& v2) {
@@ -124,21 +116,49 @@ sf::Vector2<T> operator * (const sf::Vector2<T>& v, const U& f) {
 
 template <typename T, typename U>
 sf::Vector2<T> operator / (const sf::Vector2<T>& v, const U& f) {
-    if ( sizeof(T) <= sizeof(U) )
+    if constexpr( sizeof(T) <= sizeof(U) )
         return { v.x / static_cast<T>(f), v.y / static_cast<T>(f) };
     else
         return { static_cast<U>(v.x) / f, static_cast<U>(v.y) / f };
 }
 
+template <typename T, typename U>
+sf::Vector2<T> operator / (const U& f, const sf::Vector2<T>& v) {
+    if constexpr( sizeof(T) <= sizeof(U) )
+        return { v.x / static_cast<T>(f), v.y / static_cast<T>(f) };
+    else
+        return { static_cast<U>(v.x) / f, static_cast<U>(v.y) / f };
+}
+
+template <typename T, typename U>
+sf::Vector2<T> operator / (const sf::Vector2<T>& v1, const sf::Vector2<U>& v2) {
+    if constexpr( sizeof(T) <= sizeof(U) )
+        return { v1.x / static_cast<T>(v2.x), v1.y / static_cast<T>(v2.y) };
+    else
+        return { static_cast<U>(v1.x) / v2.x, static_cast<U>(v1.y) / v2.y };
+}
+
 
 template <typename T>
-sf::Vector2<T> operator + (const sf::Vector2<T> v, const T& n) {
+sf::Vector2<T> operator + (const sf::Vector2<T>& v, const T& n) {
     return sf::Vector2<T>(v.x + n, v.y + n);
 }
 
 template <typename T, typename N>
-sf::Vector2<T> operator + (const sf::Vector2<T> v, const N& n) {
+sf::Vector2<T> operator + (const sf::Vector2<T>& v, const N& n) {
     return sf::Vector2<T>(v.x + static_cast<T>(n), v.y + static_cast<T>(n));
+}
+
+
+template <typename T>
+sf::Vector2<T> operator - (const sf::Vector2<T>& v, const T& n) {
+    return sf::Vector2<T>(v.x - n, v.y - n);
+}
+
+
+template <typename T, typename N>
+sf::Vector2<T> operator - (const sf::Vector2<T>& v, const N& n) {
+    return sf::Vector2<T>(v.x - static_cast<T>(n), v.y - static_cast<T>(n));
 }
 
 
