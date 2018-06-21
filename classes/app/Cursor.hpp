@@ -5,14 +5,15 @@
 #ifndef CURSOR_HPP
 #define CURSOR_HPP
 #include <SFML/Graphics.hpp>
-#include "Resource.hpp"
+#include "helpers/ProjectPath.hpp"
+#include "helpers/Resource.hpp"
 using Texture = Resource<sf::Texture>;
 
 class Cursor
     : public sf::Drawable
 {
     sf::RenderWindow&   mWindow;
-    Texture             mCrosshairTexture           =   make_resource<sf::Texture>("resources/images/crosshair.png");
+    Texture             mCrosshairTexture           =   makeResource<sf::Texture>(ProjectPath::Get("resources/images/crosshair.png"));
     sf::Sprite          mCrosshairSprite            =   sf::Sprite(*this->mCrosshairTexture);
     bool                mDrawCrosshair              =   false;
 

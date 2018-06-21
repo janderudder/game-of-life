@@ -1,14 +1,18 @@
 # Game of Life
-Yet another implemantation of Conway's Game of Life cellular automaton. With C++ and the great SFML library.
+Yet another implemantation of Conway's Game of Life cellular automaton.
+With C++17 and the great SFML library.
 
 Demo : https://youtu.be/OiU8AtZTn5I
 
 
 ## Compilation
-This program will compile on any machine running Linux, MacOS or Windows with the SFML library version 2.4.2 or higher installed, and a C++14 compiler.
-I compiled it with GCC 5.4 and the following command line, from the project root folder :
+This program will compile on any machine running Linux, MacOS or Windows with the SFML library version 2.4.2 or higher installed, and a C++17 compiler.
+You need to link against the C++ standard filesystem library.
+
+I compiled it with GCC 8.1 and the following command line, from the project root folder :
+
 ```bash
-g++ ./**/*.cpp -std=c++14 -I/usr/local/include/ -I./classes -o./build/automaton -L/usr/local/lib -lsfml-graphics-d -lsfml-window-d -lsfml-system-d
+g++ ./**/*.cpp -std=c++17 -I. -I./classes -o./build/automaton -lstdc++fs -lsfml-graphics-d -lsfml-window-d -lsfml-system-d
 ```
 
 

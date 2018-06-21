@@ -6,7 +6,7 @@
 #define QUITCONFIRM_FORM_HPP
 #include "forms/Form.hpp"
 #include <SFML/Graphics.hpp>
-#include "Resource.hpp"
+#include "helpers/Resource.hpp"
 #include "helpers/sf_Vector_traits.hpp"
 
 class QuitConfirm

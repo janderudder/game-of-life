@@ -5,48 +5,46 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <locale>
+#include <string>
+#include "helpers/keyb.hpp"
+#include "helpers/ProjectPath.hpp"
+#include "helpers/Resource.hpp"
 #include "helpers/sf_Vector_traits.hpp"
-#include "Resource.hpp"
+#include "app/App.hpp"
+#include "app/Cursor.hpp"
 #include "data/World.hpp"
+#include "forms/QuitConfirm.hpp"
 #include "graphics/WorldRenderer.hpp"
 #include "Camera.hpp"
-#include "helpers/keyb.hpp"
-#include "forms/QuitConfirm.hpp"
-#include "app/Cursor.hpp"
 using std::cout;
 using std::endl;
 
 
 int main(int argc, char** argv)
 {
+    //////////////////////////////////////////////////////////
+    //  Initialisation
+    //////////////////////////////////////////////////////////
 	using namespace std::literals;
 
-
-    //////////////////////////////////////////////////////////
-    //  Window creation
-    //////////////////////////////////////////////////////////
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Automaton", sf::Style::Default);
-    window.setFramerateLimit(50);
-
-
+    // Project absolute path
+    ProjectPath::Init(argv[0]);
+    
     // Font
-    auto mainFont = make_resource<sf::Font>("./resources/fonts/sansation.ttf");
-	    
+    auto mainFont = makeResource<sf::Font>(ProjectPath::Get("resources/fonts/sansation.ttf"));
+
     // Cells data
     World world(128);
 
     // Graphics
     WorldRenderer worldRenderer(world, 28);
 
-    // App mode
-    enum AppMode : std::uint8_t {
-        Edit, Play
-    };
+    // App : handling some application apects
+    App app;
 
-    auto appMode = AppMode::Edit;
-    float appClock = 0.f;
-    float refresh = .75f;
-    
+    //  Window creation
+    sf::RenderWindow window(sf::VideoMode(640, 480), "Automaton", sf::Style::Default);
+    window.setFramerateLimit(50);
 
     // Mouse & cursor
     Cursor cursor(window);
@@ -145,9 +143,8 @@ int main(int argc, char** argv)
                     case kReturn:
                         if ( quitForm.isDisplayed() )
                             window.close();
-                        else if ( appMode == AppMode::Edit )
-                            appMode = AppMode::Play;
-                        else appMode = AppMode::Edit;
+                        else
+                            app.toggleMode();
                     break;
 
                     case kPageUp:
@@ -161,31 +158,41 @@ int main(int argc, char** argv)
                     break;
 
                     case kAdd:
-                        if (refresh > .125f)
-                            refresh -= .125f;
+                        if (app.refreshRate() > .125f)
+                            // refresh -= .125f;
+                            app.speedUp();
                         
-                        else if (refresh > .025f)
-                            refresh -= .025f;
+                        else if (app.refreshRate() > .025f)
+                            // refresh -= .025f;
+                            app.speedUp();
 
-                        else refresh -= .005f;
+                        else
+                            // refresh -= .005f;
+                            app.speedUp();
 
-                        if (refresh < .005f)
-                            refresh = .005f;
+                        if (app.refreshRate() < .005f)
+                            app.setRefreshRate(.005f);
                     break;
+
                     case kSubtract:
-                        if (refresh < .025f)
-                            refresh += .005f;
+                        if (app.refreshRate() < .025f)
+                            // refresh += .005f;
+                            app.slowDown();
                         
-                        else if (refresh < .125)
-                            refresh += .25f;
+                        else if (app.refreshRate() < .125)
+                            // refresh += .25f;
+                            app.slowDown();
 
-                        else refresh += .125f;
+                        else
+                            // refresh += .125f;
+                            app.slowDown();
 
-                        if ( refresh > 2.f )
-                            refresh = 2.f;
+                        if ( app.refreshRate() > 2.f )
+                            app.setRefreshRate(2.f);
                     break;
+
                     case kR:
-                        refresh = .75f;
+                        app.setRefreshRate(.75f);
                     break;
                 }
             }
@@ -266,14 +273,14 @@ int main(int argc, char** argv)
             //////////////////////////////////////////////////////////
             //  Mouse
             //////////////////////////////////////////////////////////
-            if ( cursor.getMode() == Cursor::Crosshair ) {
-                auto mnpos = sf::Mouse::getPosition(window);
-                camera.move(static_cast<sf::Vector2f>(mnpos - mousePos));
+            if ( cursor.getMode() == Cursor::Crosshair )  {
+                auto newMousePos = sf::Mouse::getPosition(window);
+                camera.move(static_cast<sf::Vector2f>(newMousePos - mousePos));
                 sf::Mouse::setPosition(sf::Vector2i(window.getSize().x / 2, window.getSize().y / 2), window);
                 mousePos = sf::Mouse::getPosition(window);
             }
             
-            else if ( sf::Mouse::isButtonPressed(sf::Mouse::Right) && appMode == AppMode::Edit )
+            else if ( sf::Mouse::isButtonPressed(sf::Mouse::Right) && app.mode() == App::Edit )
             {
                 auto mouseWorldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), camera);
 
@@ -294,7 +301,7 @@ int main(int argc, char** argv)
 
             else if ( sf::Mouse::isButtonPressed(sf::Mouse::Left) )
             {
-                if ( drawAuthorized && appMode == AppMode::Edit )
+                if ( drawAuthorized && app.mode() == App::Edit )
                 {
                     // Check that mouse pointer is on the grid
                     auto mouseWorldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), camera);
@@ -359,15 +366,15 @@ int main(int argc, char** argv)
         
 
         // --- Data update
-        if ( appMode == AppMode::Play )
+        if ( app.mode() == App::Play )
         {
-            if ( appClock == 0.f )
+            if ( app.clock() == 0.f )
                 world.computeNextState();
             
-            appClock += frameSeconds;
+            app.clockUpdate(frameSeconds);
 
-            if ( appClock > refresh )
-                appClock = 0.f;
+            if ( app.clock() > app.refreshRate() )
+                app.clockReset();
         }
 
 
