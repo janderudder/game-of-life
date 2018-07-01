@@ -26,6 +26,7 @@ The program is divided in two modes : the editing and the simulation mode. It st
 + '+' and '−' key to speed up / slow down the simulation
 + Return to switch from drawing to simulation mode
 + Escape for the quit menu.
++ Z to set back the default zoom level.
 
 
 ## A word

@@ -4,7 +4,6 @@
  */
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <locale>
 #include <string>
 #include "helpers/keyb.hpp"
 #include "helpers/ProjectPath.hpp"
@@ -27,24 +26,36 @@ int main(int argc, char** argv)
     //////////////////////////////////////////////////////////
 	using namespace std::literals;
 
+
     // Project absolute path
     ProjectPath::Init(argv[0]);
     
+
     // Font
     auto mainFont = makeResource<sf::Font>(ProjectPath::Get("resources/fonts/sansation.ttf"));
+
 
     // Cells data
     World world(128);
 
+
     // Graphics
-    WorldRenderer worldRenderer(world, 28);
+    WorldRenderer worldRenderer(world, 16);
+
 
     // App : handling some application apects
     App app;
+    
 
-    //  Window creation
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Automaton", sf::Style::Default);
+    // Window creation, size changes according to screen resolution
+    sf::RenderWindow window;
+    if ( sf::VideoMode::getDesktopMode().width >= 1024 )
+        window.create(sf::VideoMode(800, 600), "Automaton", sf::Style::Default);
+    else
+        window.create(sf::VideoMode::getDesktopMode(), "Automaton", sf::Style::Default);    
+    
     window.setFramerateLimit(50);
+
 
     // Mouse & cursor
     Cursor cursor(window);
@@ -52,7 +63,7 @@ int main(int argc, char** argv)
     sf::Vector2i mousePos;
     bool drawAuthorized = false;
     
-    
+
     // Clicked cell
     size_t clickedCellNumber = 0;
     char   clickedCellState = 2;    // 2 = not dead nor alive (0 nor 1)

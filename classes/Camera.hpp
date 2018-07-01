@@ -79,6 +79,7 @@ public:
         auto center = this->view.getCenter();
         view = this->window.getDefaultView();
         this->view.setCenter(center);
+        this->zoom = 0;
     }
 
     const sf::Vector2f& getSpeed() const {
