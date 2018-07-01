@@ -7,6 +7,7 @@ namespace fs = std::filesystem;
 class ProjectPath
 {
     static fs::path  smPath;
+    static bool      smIsInit;
 
 public:
     ProjectPath() = delete;
