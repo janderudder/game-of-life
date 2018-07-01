@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 
 
     // Graphics
-    WorldRenderer worldRenderer(world, 16);
+    WorldRenderer worldRenderer(world, 12);
 
 
     // App : handling some application apects
@@ -78,6 +78,7 @@ int main(int argc, char** argv)
     selectRect.setOrigin(makeVector(-selectRect.getOutlineThickness()));    
     sf::Vector2f selectRectStartPos;
     bool selectionStarted = false;
+    bool selectionPossible = true;
     
 
     // Forms
@@ -148,7 +149,13 @@ int main(int argc, char** argv)
             {
                 switch ( event.key.code ) {
                     case kEscape:
-                        quitForm.toggleDisplay();
+                        if ( selectionStarted ) {   // If we were drawing the seletion rectangle, stop and reset it
+                            selectionStarted = false;
+                            selectRect.setSize({0, 0});
+                            selectionPossible = false;
+                        }
+                        else
+                            quitForm.toggleDisplay();
                     break;
 
                     case kReturn:
@@ -205,6 +212,13 @@ int main(int argc, char** argv)
                     case kR:
                         app.setRefreshRate(.75f);
                     break;
+
+                    case kC:
+                        camera.centerOn(
+                            sf::Vector2f(worldRenderer.getBounds().width, worldRenderer.getBounds().height) 
+                            / 2.f
+                        );
+                    break;
                 }
             }
 
@@ -238,7 +252,10 @@ int main(int argc, char** argv)
                 }
 
                 else if ( event.mouseButton.button == sf::Mouse::Right ) {
-                    if ( selectionStarted )   // We selected some cells
+                    if ( !selectionPossible )
+                        selectionPossible = true;   // Reset the possibility to select, after cancelling selection
+
+                    else if ( selectionStarted )    // We selected some cells
                     {
                         auto cellSize = worldRenderer.getCellSize();
                         auto worldBounds = worldRenderer.getBounds();
@@ -295,13 +312,13 @@ int main(int argc, char** argv)
             {
                 auto mouseWorldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), camera);
 
-                if ( !selectionStarted ) {
+                if ( !selectionStarted && selectionPossible ) {
                     selectRectStartPos = mouseWorldPos;
                     selectRect.setPosition(mouseWorldPos);
                     selectionStarted = true;
                 }
 
-                else {
+                else if ( selectionPossible ) {
                     auto offset = selectRect.getOutlineThickness() * 2.f;
                     selectRect.setSize({
                         mouseWorldPos.x - selectRectStartPos.x - offset,

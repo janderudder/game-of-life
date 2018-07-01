@@ -54,8 +54,6 @@ public:
     size_t graphicsCoordsToCellNumber(const sf::Vector2f&) const;
 
 
-
-
     // --- Cell to points
     sf::Vertex* getCellPoint(size_t);
     const sf::Vertex* getCellPoint(size_t) const;

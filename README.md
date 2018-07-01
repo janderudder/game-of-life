@@ -20,13 +20,14 @@ g++ ./**/*.cpp -std=c++17 -I. -I./classes -o./build/automaton -lstdc++fs -lsfml-
 The program is divided in two modes : the editing and the simulation mode. It starts in editing mode, in which you can draw live cells or erase them, with the mouse. Then, on a press on the return key, the simulation starts, until you press this key again. You cannot draw in simulation mode.
 
 #### Keys : 
-+ Left click on cells to toggle their state in drawing mode
-+ Right click in drawing mode to select and delete multiple cells
-+ Mouse Wheel or PageUp/PageDown to Zoom in and out
-+ '+' and '−' key to speed up / slow down the simulation
-+ Return to switch from drawing to simulation mode
++ Left click on cells to toggle their state in drawing mode.
++ Right click in drawing mode to select and delete multiple cells.
++ Mouse Wheel or PageUp/PageDown to Zoom in and out.
++ '+' and '−' key to speed up / slow down the simulation.
++ Return to switch from drawing to simulation mode.
 + Escape for the quit menu.
 + Z to set back the default zoom level.
++ C to go back to the center of the grid.
 
 
 ## A word
