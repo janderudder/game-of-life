@@ -70,7 +70,7 @@ int main(int argc, char** argv)
     
 
     // Forms
-    QuitConfirm quitForm(mainFont);
+    QuitConfirm quitForm(*mainFont);
     quitForm.setOrigin(quitForm.getLocalBounds().width / 2.f, quitForm.getLocalBounds().height / 2.f);
     quitForm.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 

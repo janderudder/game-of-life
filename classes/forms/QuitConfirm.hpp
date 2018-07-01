@@ -14,7 +14,7 @@ class QuitConfirm
 {
     sf::RectangleShape          rect        =   sf::RectangleShape();
     sf::Text                    text        =   sf::Text();
-    Resource<sf::Font>          font;
+    const sf::Font&             font;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override {
         if ( this->displayed ) {
@@ -25,8 +25,8 @@ class QuitConfirm
     }
 
 public:
-    explicit QuitConfirm(const Resource<sf::Font>& fontRes) noexcept
-        : font  ( fontRes )
+    explicit QuitConfirm(const sf::Font& aFont) noexcept
+        : font  ( aFont )
     {
         this->rect.setOutlineThickness(6.f);
         this->rect.setSize(sf::Vector2f(512 - rect.getOutlineThickness() * 2, 256 - rect.getOutlineThickness() * 2));
@@ -35,7 +35,7 @@ public:
 
         this->setOrigin(-rect.getOutlineThickness(), -rect.getOutlineThickness());
 
-        this->text.setFont(*(this->font));
+        this->text.setFont(this->font);
         this->text.setCharacterSize(22);
         this->text.setFillColor(sf::Color::Black);
         this->text.setString("Press Enter to quit.");

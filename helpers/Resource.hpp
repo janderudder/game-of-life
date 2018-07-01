@@ -13,28 +13,28 @@
  * The Resource type
  */
 template <class T>
-using Resource = std::shared_ptr<T>;
+using Resource = std::unique_ptr<T>;
 
 /**
  * Factory functions
  */
 template <class T, class... Args_T>
 Resource<T> makeResource(Args_T&&... args) {
-    return std::move(std::make_shared<T>(std::forward<Args_T>(args)...));
+    return std::move(std::make_unique<T>(std::forward<Args_T>(args)...));
 }
 
 
 template <class T>
 Resource<T> makeResource(std::filesystem::path&& filePath) {
-    auto resource = std::make_shared<T>();
-    resource->loadFromFile(filePath.generic_string());
+    auto resource = std::make_unique<T>();
+    resource->loadFromFile(std::forward<std::filesystem::path>(filePath).generic_string());
     return resource;
 }
 
 
 template <class T>
 Resource<T> makeResource(const char* filename) {
-    auto resource = std::make_shared<T>();
+    auto resource = std::make_unique<T>();
     resource->loadFromFile(filename);
     return resource;
 }
@@ -42,7 +42,7 @@ Resource<T> makeResource(const char* filename) {
 
 template <class T>
 Resource<T> makeResource(const std::string& filename) {
-    auto resource = std::make_shared<T>();
+    auto resource = std::make_unique<T>();
     resource->loadFromFile(filename);
     return resource;
 }
