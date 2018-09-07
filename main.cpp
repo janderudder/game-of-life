@@ -351,7 +351,7 @@ int main(int argc, char** argv)
             //////////////////////////////////////////////////////////
             //  Keyboard
             //////////////////////////////////////////////////////////
-             if ( cursor.getMode() == Cursor::Normal )
+            if ( cursor.getMode() == Cursor::Normal )
             {
                 if ( keyb(kLShift) || keyb(kRShift) ) {
                     if ( keyb(kUp) )
@@ -416,12 +416,12 @@ int main(int argc, char** argv)
         window.clear(sf::Color(46, 90, 254));
         
         window.setView(camera);
-          window.draw(worldRenderer);
-          window.draw(selectRect);
+            window.draw(worldRenderer);
+            window.draw(selectRect);
         
         window.setView(defaultView);
-          window.draw(cursor);
-          window.draw(quitForm);
+            window.draw(cursor);
+            window.draw(quitForm);
 
         window.display();
 

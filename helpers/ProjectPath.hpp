@@ -1,7 +1,6 @@
 #ifndef PROJECT_PATH_HPP
 #define PROJECT_PATH_HPP
 #include <filesystem>
-#include <string>
 namespace fs = std::filesystem;
 
 class ProjectPath
