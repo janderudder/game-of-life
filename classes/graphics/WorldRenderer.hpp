@@ -20,7 +20,8 @@ class WorldRenderer
     bool                drawLines_b         =   true;
     sf::Color           noCell_col          =   sf::Color::Transparent;
     sf::Color           aliveCell_col       =   sf::Color::Black;
-    sf::Color           visitedCell_col     =   sf::Color(109, 205, 109);
+    sf::Color           visitedCell_col     =   sf::Color(255, 231, 158);
+    sf::Color           lines_col           =   sf::Color(158, 150, 150);
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates = sf::RenderStates::Default) const override;
 

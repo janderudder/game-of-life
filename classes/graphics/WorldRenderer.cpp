@@ -68,8 +68,8 @@ WorldRenderer(const World& w, float cellSize)
 
     // Default lines color
     for (size_t i=0;  i < lines.getVertexCount();  ++i)
-        lines[i].color = sf::Color(64, 64, 64);
-    
+        lines[i].color = lines_col;
+
 }
 
 
@@ -180,7 +180,7 @@ update()
     {
         sf::Vertex* originPoint = this->getCellPoint(i);
         sf::Color color = this->noCell_col;
-        
+
         if ( cell.isAlive() )
             color = this->aliveCell_col;
         else if ( cell.wasVisited() )
@@ -209,9 +209,9 @@ update()
 sf::Vector2<size_t>                WorldRenderer::
 graphicsToDataCoords(const sf::Vector2f& coords) const
 {
-    return { 
-        static_cast<size_t>(std::floor(coords.x / cellSize)), 
-        static_cast<size_t>(std::floor(coords.y / cellSize)) 
+    return {
+        static_cast<size_t>(std::floor(coords.x / cellSize)),
+        static_cast<size_t>(std::floor(coords.y / cellSize))
     };
 }
 

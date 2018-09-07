@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 
     // Project absolute path
     ProjectPath::Init(argv[0]);
-    
+
 
     // Font
     auto mainFont = makeResource<sf::Font>(ProjectPath::Get("resources/fonts/sansation.ttf"));
@@ -45,15 +45,15 @@ int main(int argc, char** argv)
 
     // App : handling some application apects
     App app;
-    
+
 
     // Window creation, size changes according to screen resolution
     sf::RenderWindow window;
     if ( sf::VideoMode::getDesktopMode().width >= 1024 )
         window.create(sf::VideoMode(800, 600), "Automaton", sf::Style::Default);
     else
-        window.create(sf::VideoMode::getDesktopMode(), "Automaton", sf::Style::Default);    
-    
+        window.create(sf::VideoMode::getDesktopMode(), "Automaton", sf::Style::Default);
+
     window.setFramerateLimit(50);
 
 
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 
     sf::Vector2i mousePos;
     bool drawAuthorized = false;
-    
+
 
     // Clicked cell
     size_t clickedCellNumber = 0;
@@ -75,11 +75,11 @@ int main(int argc, char** argv)
     selectRect.setOutlineColor(sf::Color::Red);
     selectRect.setFillColor(sf::Color::Transparent);
     selectRect.setSize({0, 0});
-    selectRect.setOrigin(makeVector(-selectRect.getOutlineThickness()));    
+    selectRect.setOrigin(makeVector(-selectRect.getOutlineThickness()));
     sf::Vector2f selectRectStartPos;
     bool selectionStarted = false;
     bool selectionPossible = true;
-    
+
 
     // Forms
     QuitConfirm quitForm(*mainFont);
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     float cameraRunSpeed = 3.5f;
     camera.centerOn(worldRenderer.getBounds().width / 2.f, worldRenderer.getBounds().height / 2.f);
 
-    
+
     //////////////////////////////////////////////////////////
     //  Frame clock
     //////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ int main(int argc, char** argv)
                         if (app.refreshRate() > .125f)
                             // refresh -= .125f;
                             app.speedUp();
-                        
+
                         else if (app.refreshRate() > .025f)
                             // refresh -= .025f;
                             app.speedUp();
@@ -196,7 +196,7 @@ int main(int argc, char** argv)
                         if (app.refreshRate() < .025f)
                             // refresh += .005f;
                             app.slowDown();
-                        
+
                         else if (app.refreshRate() < .125)
                             // refresh += .25f;
                             app.slowDown();
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
 
                     case kC:
                         camera.centerOn(
-                            sf::Vector2f(worldRenderer.getBounds().width, worldRenderer.getBounds().height) 
+                            sf::Vector2f(worldRenderer.getBounds().width, worldRenderer.getBounds().height)
                             / 2.f
                         );
                     break;
@@ -231,7 +231,7 @@ int main(int argc, char** argv)
                 }
 
                 else if ( event.mouseButton.button == sf::Mouse::Left ) {
-                    // Prevent drawing cells while we move or resize the window, because when we click 
+                    // Prevent drawing cells while we move or resize the window, because when we click
                     // on window's sides or title bar, this event will not be fired.
                     drawAuthorized = true;
                 }
@@ -243,7 +243,7 @@ int main(int argc, char** argv)
                 if ( event.mouseButton.button == sf::Mouse::Middle ) {
                     cursor.setMode(Cursor::Normal);
                 }
-                
+
                 else if ( event.mouseButton.button == sf::Mouse::Left ) {
                     // Resetting cursor states
                     clickedCellNumber = 0;
@@ -292,7 +292,7 @@ int main(int argc, char** argv)
             }
         } // -- events handling loop end
 
-        
+
         //////////////////////////////////////////////////////////
         //  Live events
         //////////////////////////////////////////////////////////
@@ -307,7 +307,7 @@ int main(int argc, char** argv)
                 sf::Mouse::setPosition(sf::Vector2i(window.getSize().x / 2, window.getSize().y / 2), window);
                 mousePos = sf::Mouse::getPosition(window);
             }
-            
+
             else if ( sf::Mouse::isButtonPressed(sf::Mouse::Right) && app.mode() == App::Edit )
             {
                 auto mouseWorldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), camera);
@@ -384,21 +384,21 @@ int main(int argc, char** argv)
         } // -- live events end (window.hasFocus())
 
         else  {     // If window has lost focus, reset some stuff
-            cursor.setMode(Cursor::Normal);            
+            cursor.setMode(Cursor::Normal);
             drawAuthorized = false;
         }
 
         // Correct "mysterious" mouse grab bug
         if ( cursor.getMode() != Cursor::Crosshair )
             window.setMouseCursorGrabbed(false);
-        
+
 
         // --- Data update
         if ( app.mode() == App::Play )
         {
             if ( app.clock() == 0.f )
                 world.computeNextState();
-            
+
             app.clockUpdate(frameSeconds);
 
             if ( app.clock() > app.refreshRate() )
@@ -413,12 +413,12 @@ int main(int argc, char** argv)
         //////////////////////////////////////////////////////////
         //  Display
         //////////////////////////////////////////////////////////
-        window.clear(sf::Color(46, 90, 254));
-        
+        window.clear(sf::Color(227, 223, 223));
+
         window.setView(camera);
             window.draw(worldRenderer);
             window.draw(selectRect);
-        
+
         window.setView(defaultView);
             window.draw(cursor);
             window.draw(quitForm);
