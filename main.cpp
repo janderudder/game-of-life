@@ -152,91 +152,92 @@ int main(int argc, char** argv)
             else if ( event.type == sf::Event::KeyPressed )
             {
                 switch ( event.key.code ) {
-                    case kEscape:
-                        if ( selectionStarted ) {   // If we were drawing the seletion rectangle, stop and reset it
-                            selectionStarted = false;
-                            selectRect.setSize({0, 0});
-                            selectionPossible = false;
-                        }
-                        else
-                            quitForm.toggleDisplay();
-                    break;
+                case kEscape:
+                    // If we were drawing the selection rectangle, stop and reset it
+                    if ( selectionStarted ) {
+                        selectionStarted = false;
+                        selectRect.setSize({0, 0});
+                        selectionPossible = false;
+                    }
+                    else
+                        quitForm.toggleDisplay();
+                break;
 
-                    case kReturn:
-                        if ( quitForm.isDisplayed() )
-                            window.close();
-                        else
-                            app.toggleMode();
-                    break;
+                case kReturn:
+                    if ( quitForm.isDisplayed() )
+                        window.close();
+                    else
+                        app.toggleMode();
+                break;
 
-                    case kPageUp:
-                        camera.zoomIn();
-                    break;
-                    case kPageDown:
-                        camera.zoomOut();
-                    break;
-                    case kZ:
-                        camera.resetZoom();
-                    break;
+                case kPageUp:
+                    camera.zoomIn();
+                break;
+                case kPageDown:
+                    camera.zoomOut();
+                break;
+                case kZ:
+                    camera.resetZoom();
+                break;
 
-                    case kAdd:
-                        if (app.refreshRate() > .125f)
-                            // refresh -= .125f;
-                            app.speedUp();
+                case kAdd:
+                    if (app.refreshRate() > .125f)
+                        // refresh -= .125f;
+                        app.speedUp();
 
-                        else if (app.refreshRate() > .025f)
-                            // refresh -= .025f;
-                            app.speedUp();
+                    else if (app.refreshRate() > .025f)
+                        // refresh -= .025f;
+                        app.speedUp();
 
-                        else
-                            // refresh -= .005f;
-                            app.speedUp();
+                    else
+                        // refresh -= .005f;
+                        app.speedUp();
 
-                        if (app.refreshRate() < .005f)
-                            app.setRefreshRate(.005f);
-                    break;
+                    if (app.refreshRate() < .005f)
+                        app.setRefreshRate(.005f);
+                break;
 
-                    case kSubtract:
-                        if (app.refreshRate() < .025f)
-                            // refresh += .005f;
-                            app.slowDown();
+                case kSubtract:
+                    if (app.refreshRate() < .025f)
+                        // refresh += .005f;
+                        app.slowDown();
 
-                        else if (app.refreshRate() < .125)
-                            // refresh += .25f;
-                            app.slowDown();
+                    else if (app.refreshRate() < .125)
+                        // refresh += .25f;
+                        app.slowDown();
 
-                        else
-                            // refresh += .125f;
-                            app.slowDown();
+                    else
+                        // refresh += .125f;
+                        app.slowDown();
 
-                        if ( app.refreshRate() > 2.f )
-                            app.setRefreshRate(2.f);
-                    break;
+                    if ( app.refreshRate() > 2.f )
+                        app.setRefreshRate(2.f);
+                break;
 
-                    case kR:
-                        app.setRefreshRate(.75f);
-                    break;
+                case kR:
+                    app.setRefreshRate(.75f);
+                break;
 
-                    case kC:
-                        camera.centerOn(
-                            sf::Vector2f(worldRenderer.getBounds().width, worldRenderer.getBounds().height)
-                            / 2.f
-                        );
-                    break;
+                case kC:
+                    camera.centerOn(
+                        sf::Vector2f(worldRenderer.getBounds().width, worldRenderer.getBounds().height)
+                        / 2.f
+                    );
+                break;
 
-                    case kB:
-                        if ( app.mode() == App::Edit ) {
-                            world.goBackward();
-                            movedInTime = true;
-                        }
-                    break;
+                case kB:
+                    if ( app.mode() == App::Edit ) {
+                        world.goBackward();
+                        movedInTime = true;
+                    }
+                break;
 
-                    case kF:
-                        if ( app.mode() == App::Edit ) {
-                            world.computeNextState();
-                            movedInTime = true;
-                        }
-                    break;
+                case kF:
+                    if ( app.mode() == App::Edit ) {
+                        world.computeNextState();
+                        movedInTime = true;
+                    }
+                break;
                 }
             }
 
@@ -269,35 +270,7 @@ int main(int argc, char** argv)
                     drawAuthorized = false;
                 }
 
-                else if ( event.mouseButton.button == sf::Mouse::Right ) {
-                    if ( !selectionPossible )
-                        selectionPossible = true;   // Reset the possibility to select, after cancelling selection
-
-                    else if ( selectionStarted )    // We selected some cells
-                    {
-                        auto cellSize = worldRenderer.getCellSize();
-                        auto worldBounds = worldRenderer.getBounds();
-                        auto rectBounds = selectRect.getGlobalBounds();
-
-                        sf::Vector2f rectBeg = { rectBounds.left, rectBounds.top };
-                        sf::Vector2f rectEnd = { rectBounds.left + rectBounds.width, rectBounds.top + rectBounds.height };
-
-                        for ( float y = rectBeg.y;  y < rectEnd.y;  y += cellSize )
-                        for ( float x = rectBeg.x;  x < rectEnd.x;  x += cellSize )
-                        {
-                            if ( worldBounds.contains({x, y}) ) {
-                                auto cellN = worldRenderer.graphicsCoordsToCellNumber({x, y});
-                                sf::Vector2f upLeftPoint = worldRenderer.getCellPoint(cellN)->position;
-                                sf::Vector2f downRightPoint = { upLeftPoint.x + cellSize, upLeftPoint.y + cellSize };
-                                if ( world[cellN].isAlive() )
-                                    world[cellN].toggleEdit();
-                            }
-                        }
-
-                        selectionStarted = false;
-                        selectRect.setSize({0, 0});
-                    }
-                }
+                // Right click release is handled in live events outside of win's focus.
             }
 
 
@@ -399,19 +372,62 @@ int main(int argc, char** argv)
                 }
             }
 
-        } // -- live events end (window.hasFocus())
+        } // -- window.hasFocus() end
 
+
+        //////////////////////////////////////////////////////////
+        // No focus
+        //////////////////////////////////////////////////////////
         else  {     // If window has lost focus, reset some stuff
             cursor.setMode(Cursor::Normal);
             drawAuthorized = false;
         }
+
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // Handle Right Click Release here, to enable releasing it outside the window
+        ///////////////////////////////////////////////////////////////////////////////
+        if ( !sf::Mouse::isButtonPressed(sf::Mouse::Right) )
+        {
+            if ( !selectionPossible )
+                selectionPossible = true;   // Reset the possibility to select, after cancelling selection
+
+            else if ( selectionStarted )    // We selected some cells
+            {
+                auto cellSize = worldRenderer.getCellSize();
+                auto worldBounds = worldRenderer.getBounds();
+                auto rectBounds = selectRect.getGlobalBounds();
+
+                sf::Vector2f rectBeg = { rectBounds.left, rectBounds.top };
+                sf::Vector2f rectEnd = { rectBounds.left + rectBounds.width, rectBounds.top + rectBounds.height };
+
+                for ( float y = rectBeg.y;  y < rectEnd.y;  y += cellSize )
+                for ( float x = rectBeg.x;  x < rectEnd.x;  x += cellSize )
+                {
+                    if ( worldBounds.contains({x, y}) ) {
+                        auto cellN = worldRenderer.graphicsCoordsToCellNumber({x, y});
+                        sf::Vector2f upLeftPoint = worldRenderer.getCellPoint(cellN)->position;
+                        sf::Vector2f downRightPoint = { upLeftPoint.x + cellSize, upLeftPoint.y + cellSize };
+                        if ( world[cellN].isAlive() )
+                            world[cellN].toggleEdit();
+                    }
+                }
+
+                selectionStarted = false;
+                selectRect.setSize({0, 0});
+            }
+        }
+
 
         // Correct "mysterious" mouse grab bug
         if ( cursor.getMode() != Cursor::Crosshair )
             window.setMouseCursorGrabbed(false);
 
 
-        // --- Data update
+
+        //////////////////////////////////////////////////////////
+        //  Data update
+        //////////////////////////////////////////////////////////
         if ( movedInTime ) {
             app.clockReset();
             movedInTime = false;
@@ -428,8 +444,11 @@ int main(int argc, char** argv)
         }
 
 
-        // --- Graphic update
+        //////////////////////////////////////////////////////////
+        //  Graphic update
+        //////////////////////////////////////////////////////////
         worldRenderer.update();
+
 
 
         //////////////////////////////////////////////////////////
@@ -452,5 +471,6 @@ int main(int argc, char** argv)
 
 
 	return 0;
+
 }
 

@@ -29,6 +29,8 @@ The program is divided in two modes : the editing and the simulation mode. It st
 + Escape for the quit menu.
 + Z to set back the default zoom level.
 + C to go back to the center of the grid.
++ B to go back in time (drawing mode).
++ F to manually go forward (drawing mode).
 
 
 ## A word
