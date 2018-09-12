@@ -87,6 +87,10 @@ int main(int argc, char** argv)
     quitForm.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 
 
+    // Generations : previous and future stacks
+    bool movedInTime = false;
+
+
     //////////////////////////////////////////////////////////
     //  Camera (view)
     //////////////////////////////////////////////////////////
@@ -218,6 +222,20 @@ int main(int argc, char** argv)
                             sf::Vector2f(worldRenderer.getBounds().width, worldRenderer.getBounds().height)
                             / 2.f
                         );
+                    break;
+
+                    case kB:
+                        if ( app.mode() == App::Edit ) {
+                            world.goBackward();
+                            movedInTime = true;
+                        }
+                    break;
+
+                    case kF:
+                        if ( app.mode() == App::Edit ) {
+                            world.computeNextState();
+                            movedInTime = true;
+                        }
                     break;
                 }
             }
@@ -394,8 +412,12 @@ int main(int argc, char** argv)
 
 
         // --- Data update
-        if ( app.mode() == App::Play )
-        {
+        if ( movedInTime ) {
+            app.clockReset();
+            movedInTime = false;
+        }
+
+        else if ( app.mode() == App::Play ) {
             if ( app.clock() == 0.f )
                 world.computeNextState();
 

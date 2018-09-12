@@ -6,14 +6,20 @@
 #define DATA_WORLD_CPP
 #include "data/Cell.hpp"
 #include <vector>
+#include <stack>
 #include <cassert>
 using std::size_t;
+using gen_num_t = std::size_t;
+
 
 class World
 {
-    std::vector<Cell>       mCells;
-    size_t                  mWidth;
-    size_t                  mHeight;
+    std::vector<Cell>               mCells;
+    std::stack<std::vector<Cell>>   mPreviousGenerations            =   {};
+    std::stack<std::vector<Cell>>   mFutureGenerations              =   {};
+    size_t                          mWidth;
+    size_t                          mHeight;
+    gen_num_t                       mGenerationNumber = 0;
 
 
 public:
@@ -21,13 +27,15 @@ public:
     explicit World(size_t squareWorldSideSize);
 
 
-    // --- Apply rules
+    // --- Generations
     void computeNextState();
+    void goBackward();
 
 
     // --- Grid dimensions
     const size_t& getWidth() const;
     const size_t& getHeight() const;
+    inline gen_num_t getGeneration() const      { return mGenerationNumber; }
 
 
     // --- Access cell by number

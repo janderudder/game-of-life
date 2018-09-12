@@ -12,7 +12,7 @@ using std::size_t;
 class WorldRenderer
     : public sf::Drawable
 {
-    World const&        mWorld;
+    const World&        mWorld;
     float               mCellSize;
     sf::FloatRect       mBounds;
     sf::VertexArray     mLines              =   sf::VertexArray(sf::PrimitiveType::Lines);
@@ -23,8 +23,8 @@ class WorldRenderer
     sf::Color           mVisitedCellColor   =   sf::Color(255, 231, 158);
     sf::Color           mLinesColor         =   sf::Color(158, 150, 150);
 
-    virtual void draw(sf::RenderTarget&, sf::RenderStates = sf::RenderStates::Default) const override;
 
+    virtual void draw(sf::RenderTarget&, sf::RenderStates = sf::RenderStates::Default) const override;
 
 public:
     explicit WorldRenderer(const World&, float = 32.f);
@@ -66,3 +66,4 @@ public:
 };
 
 #endif // GRAPHICS_WORLDRENDERER_HPP
+

@@ -36,10 +36,12 @@ computeNextState()
     auto nextState(mCells);    // Copy world data array
     auto cellCount = mCells.size();
 
+    mGenerationNumber++;
 
     for ( int h=0;  (size_t)h < mHeight;  ++h )
     for ( int w=0;  (size_t)w < mWidth;  ++w )
     {
+        // Get number of neighbors alive
         uint8_t aliveNeighbors = 0;
 
         // Neighbors above the cell
@@ -65,18 +67,37 @@ computeNextState()
         // determine the cell's next state.
         size_t cell = mWidth * h + w;
         if ( aliveNeighbors == 3 ) {
-            nextState[cell].live();
+            nextState[cell].live(mGenerationNumber);
         }
         else if ( aliveNeighbors != 2 ) {
-            nextState[cell].die();
+            nextState[cell].die(mGenerationNumber);
         }
 
     }
 
-    // Now that the new state is computed, make it the current one
-    std::swap(mCells, nextState);
+    // Now that the new state is computed, move the previous one in
+    // the prev stack, and make this one the current one.
+    mPreviousGenerations.emplace(std::move(mCells));
+    mCells = std::move(nextState);
+
+    // Since we moved normally, clear saved future states
+    while ( !mFutureGenerations.empty() )
+        mFutureGenerations.pop();
 
 }
+
+
+
+void World::goBackward()
+{
+    if ( mPreviousGenerations.empty() )
+        return;
+
+    mCells = std::move(mPreviousGenerations.top());
+    mPreviousGenerations.pop();
+    mGenerationNumber--;
+}
+
 
 
 
