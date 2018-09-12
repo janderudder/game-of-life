@@ -183,7 +183,7 @@ update()
 
         if ( cell.isAlive() )
             color = mAliveCellColor;
-        else if ( cell.wasVisited() )
+        else if ( cell.isVisited() )
             color = mVisitedCellColor;
 
         if ( originPoint->color != color ) {

@@ -6,9 +6,9 @@
 
 
 Cell::
-Cell(bool isAlive) noexcept
-    : mIsAlive     ( isAlive )
-    , mIsVisited   ( isAlive )
+Cell(bool isAlive, gen_num_t visitedOn) noexcept
+    : mIsAlive              { isAlive }
+    , mVisitedOnGeneration  { visitedOn }
 {
 
 }
@@ -16,24 +16,26 @@ Cell(bool isAlive) noexcept
 
 
 void        Cell::
-live() {
+live(gen_num_t genNumber) {
     mIsAlive = true;
-    mIsVisited = true;
+    mVisitedOnGeneration = genNumber;
 }
 
 
 void        Cell::
-die() {
-    if ( mIsAlive )
-        mIsVisited = true;
+die(gen_num_t genNumber)
+{
+    if (mIsAlive  &&  !this->isVisited())
+        mVisitedOnGeneration = genNumber;
+
     mIsAlive = false;
 }
 
 
 
 void        Cell::
-visit() {
-    mIsVisited = true;
+visit(gen_num_t genNumber) {
+    mVisitedOnGeneration = genNumber;
 }
 
 
