@@ -7,15 +7,15 @@
 
 class Cell
 {
-    bool        alive;
-    bool        visited;
+    bool        mIsAlive;
+    bool        mIsVisited;
 
 public:
-    explicit Cell(bool alive = false) noexcept;
+    explicit Cell(bool mIsAlive = false) noexcept;
 
     // --- States access
-    const bool& isAlive() const         { return this->alive; }
-    const bool& wasVisited() const      { return this->visited; }
+    const bool& isAlive() const         { return this->mIsAlive; }
+    const bool& wasVisited() const      { return this->mIsVisited; }
 
     void live();
     void die();

@@ -5,10 +5,10 @@
 #include "data/Cell.hpp"
 
 
-Cell:: 
+Cell::
 Cell(bool isAlive) noexcept
-    : alive     ( isAlive )
-    , visited   ( isAlive )
+    : mIsAlive     ( isAlive )
+    , mIsVisited   ( isAlive )
 {
 
 }
@@ -17,28 +17,29 @@ Cell(bool isAlive) noexcept
 
 void        Cell::
 live() {
-    this->alive = true;
-    this->visited = true;
+    this->mIsAlive = true;
+    this->mIsVisited = true;
 }
 
 
 void        Cell::
 die() {
-    if ( this->alive )
-        this->visited = true;
-    this->alive = false;
+    if ( this->mIsAlive )
+        this->mIsVisited = true;
+    this->mIsAlive = false;
 }
 
 
 
 void        Cell::
 visit() {
-    this->visited = true;
+    this->mIsVisited = true;
 }
 
 
 
 void        Cell::
 toggleEdit() {
-    this->alive = !this->alive;
+    this->mIsAlive = !this->mIsAlive;
 }
+

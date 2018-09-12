@@ -8,86 +8,86 @@
 
 class Camera
 {
-    sf::View                    view;
-    const sf::RenderWindow&     window;
-    sf::Vector2f                speed           =   { 350.f, 350.f };
-    int                         zoom            =   0;
+    sf::View                    mView;
+    const sf::RenderWindow&     mWindow;
+    sf::Vector2f                mSpeed           =   { 350.f, 350.f };
+    int                         mZoom            =   0;
 
 public:
     explicit Camera(const sf::RenderWindow& w) noexcept
-        : view      { w.getDefaultView() }
-        , window    { w }
+        : mView      { w.getDefaultView() }
+        , mWindow    { w }
     { }
 
 
     const sf::View& getView() const {
-        return this->view;
+        return this->mView;
     }
 
     operator const sf::View&() const {
-        return this->view;
+        return this->mView;
     }
 
 
     void onWindowResize()
     {
-        auto center = window.mapCoordsToPixel(this->view.getCenter(), this->view);
+        auto center = mWindow.mapCoordsToPixel(this->mView.getCenter(), this->mView);
 
-        view.setSize(static_cast<sf::Vector2f>(window.getSize()));
+        mView.setSize(static_cast<sf::Vector2f>(mWindow.getSize()));
 
-        // Reapply zoom
-        if ( this->zoom > 0 ) {
-            for (int i=0; i < zoom;  ++i)
-                this->view.zoom(.9f);
+        // Reapply mZoom
+        if ( this->mZoom > 0 ) {
+            for (int i=0; i < mZoom;  ++i)
+                this->mView.zoom(.9f);
         }
-        else if ( this->zoom < 0 ) {
-            for (int i=0; i > zoom; --i)
-                this->view.zoom(1.1f);
+        else if ( this->mZoom < 0 ) {
+            for (int i=0; i > mZoom; --i)
+                this->mView.zoom(1.1f);
         }
-        
-        this->view.setCenter(window.mapPixelToCoords(center, this->view));
+
+        this->mView.setCenter(mWindow.mapPixelToCoords(center, this->mView));
     }
 
 
     void centerOn(float x, float y) {
-        this->view.setCenter(x, y);
+        this->mView.setCenter(x, y);
     }
 
     void centerOn(const sf::Vector2f& pos) {
-        this->view.setCenter(pos);
+        this->mView.setCenter(pos);
     }
 
     void move(const sf::Vector2f& v) {
-        view.move(v);
+        mView.move(v);
     }
 
     void move(float x, float y) {
-        view.move(sf::Vector2f(x, y));
+        mView.move(sf::Vector2f(x, y));
     }
 
     void zoomIn() {
-        this->zoom += 1;
-        this->view.zoom(.9f);
+        this->mZoom += 1;
+        this->mView.zoom(.9f);
     }
-    
+
     void zoomOut() {
-        this->zoom -= 1;
-        this->view.zoom(1.1f);
+        this->mZoom -= 1;
+        this->mView.zoom(1.1f);
     }
 
     void resetZoom() {
-        auto center = this->view.getCenter();
-        view = this->window.getDefaultView();
-        this->view.setCenter(center);
-        this->zoom = 0;
+        auto center = this->mView.getCenter();
+        mView = this->mWindow.getDefaultView();
+        this->mView.setCenter(center);
+        this->mZoom = 0;
     }
 
     const sf::Vector2f& getSpeed() const {
-        return this->speed;
+        return this->mSpeed;
     }
 
     void setSpeed(const sf::Vector2f& s) {
-        this->speed = s;
+        this->mSpeed = s;
     }
 
 };

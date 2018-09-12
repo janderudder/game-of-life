@@ -11,9 +11,9 @@ using std::uint8_t;
 ////////////////////////////////////////////////////////////////
 World::
 World(size_t w, size_t h)
-    : cells     { w * h, Cell() }
-    , width     { w }
-    , height    { h }
+    : mCells     { w * h, Cell() }
+    , mWidth     { w }
+    , mHeight    { h }
 {
 
 }
@@ -22,8 +22,8 @@ World(size_t w, size_t h)
 World::
 World(size_t squareWorldSideSize)
     : World(squareWorldSideSize, squareWorldSideSize)
-{ 
-    
+{
+
 }
 
 
@@ -33,18 +33,18 @@ World(size_t squareWorldSideSize)
 void World::
 computeNextState()
 {
-    auto nextState(this->cells);    // Copy world data array    
-    auto cellCount = this->cells.size();
+    auto nextState(this->mCells);    // Copy world data array
+    auto cellCount = this->mCells.size();
 
 
-    for ( int h=0;  (size_t)h < this->height;  ++h )
-    for ( int w=0;  (size_t)w < this->width;  ++w )
+    for ( int h=0;  (size_t)h < this->mHeight;  ++h )
+    for ( int w=0;  (size_t)w < this->mWidth;  ++w )
     {
         uint8_t aliveNeighbors = 0;
 
         // Neighbors above the cell
         for (int i=0; i < 3; ++i) {
-            if ( (*this)(w - 1 + i,   h - 1).isAlive() ) 
+            if ( (*this)(w - 1 + i,   h - 1).isAlive() )
                 ++aliveNeighbors;
         }
 
@@ -57,13 +57,13 @@ computeNextState()
 
         // Line below the cell
         for (int i=0; i < 3; ++i) {
-            if ( (*this)(w - 1 + i,   h + 1).isAlive() ) 
+            if ( (*this)(w - 1 + i,   h + 1).isAlive() )
                 ++aliveNeighbors;
         }
 
         // We got the number of alive neighbors,
         // determine the cell's next state.
-        size_t cell = this->width * h + w;
+        size_t cell = this->mWidth * h + w;
         if ( aliveNeighbors == 3 ) {
             nextState[cell].live();
         }
@@ -71,13 +71,10 @@ computeNextState()
             nextState[cell].die();
         }
 
-        // Handle visited state -- this really should be optimized
-        if ( cells[cell].isAlive() && !cells[cell].wasVisited() )
-            nextState[cell].visit();
     }
 
     // Now that the new state is computed, make it the current one
-    std::swap(this->cells, nextState);
+    std::swap(this->mCells, nextState);
 
 }
 
@@ -89,13 +86,13 @@ computeNextState()
 ////////////////////////////////////////////////////////////////
 const size_t&      World::
 getWidth() const {
-    return this->width;
+    return this->mWidth;
 }
 
 
 const size_t&      World::
 getHeight() const {
-    return this->height;
+    return this->mHeight;
 }
 
 
@@ -105,17 +102,17 @@ getHeight() const {
 ////////////////////////////////////////////////////////////////
 Cell&               World::
 operator()(int x, int y) {
-    if ( x >= (int)this->width )
-        x -= (int)this->width;
+    if ( x >= (int)this->mWidth )
+        x -= (int)this->mWidth;
     else if ( x < 0 )
-        x += (int)this->width;
+        x += (int)this->mWidth;
 
-    if ( y >= (int)this->height )
-        y -= (int)this->height;
+    if ( y >= (int)this->mHeight )
+        y -= (int)this->mHeight;
     else if ( y < 0 )
-        y += (int)this->height;
+        y += (int)this->mHeight;
 
-    return this->cells[this->width * y + x];
+    return this->mCells[this->mWidth * y + x];
 }
 
 

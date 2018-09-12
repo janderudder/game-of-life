@@ -12,16 +12,16 @@ using std::size_t;
 class WorldRenderer
     : public sf::Drawable
 {
-    World const&        world;
-    float               cellSize;
-    sf::FloatRect       bounds;
-    sf::VertexArray     lines               =   sf::VertexArray(sf::PrimitiveType::Lines);
-    sf::VertexArray     triangles           =   sf::VertexArray(sf::PrimitiveType::Triangles);
-    bool                drawLines_b         =   true;
-    sf::Color           noCell_col          =   sf::Color::Transparent;
-    sf::Color           aliveCell_col       =   sf::Color::Black;
-    sf::Color           visitedCell_col     =   sf::Color(255, 231, 158);
-    sf::Color           lines_col           =   sf::Color(158, 150, 150);
+    World const&        mWorld;
+    float               mCellSize;
+    sf::FloatRect       mBounds;
+    sf::VertexArray     mLines               =   sf::VertexArray(sf::PrimitiveType::Lines);
+    sf::VertexArray     mTriangles           =   sf::VertexArray(sf::PrimitiveType::Triangles);
+    bool                mDoDrawLines         =   true;
+    sf::Color           mNoCellColor          =   sf::Color::Transparent;
+    sf::Color           mAliveCellColor       =   sf::Color::Black;
+    sf::Color           mVisitedCellColor     =   sf::Color(255, 231, 158);
+    sf::Color           mLinesColor           =   sf::Color(158, 150, 150);
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates = sf::RenderStates::Default) const override;
 

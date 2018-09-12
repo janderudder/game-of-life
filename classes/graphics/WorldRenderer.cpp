@@ -14,10 +14,10 @@
 void        WorldRenderer::
 draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    target.draw(triangles, states);
+    target.draw(mTriangles, states);
 
-    if ( this->drawLines_b )
-        target.draw(lines, states);
+    if ( this->mDoDrawLines )
+        target.draw(mLines, states);
 }
 
 
@@ -29,46 +29,46 @@ draw(sf::RenderTarget& target, sf::RenderStates states) const
 ////////////////////////////////////////////////////////////////
 WorldRenderer::
 WorldRenderer(const World& w, float cellSize)
-    : world     ( w )
-    , cellSize  ( cellSize )
-    , bounds    { 0, 0, w.getWidth() * cellSize, w.getHeight() * cellSize }
+    : mWorld     ( w )
+    , mCellSize  ( cellSize )
+    , mBounds    { 0, 0, w.getWidth() * cellSize, w.getHeight() * cellSize }
 {
-    auto width = cellSize * world.getWidth();
-    auto height = cellSize * world.getHeight();
+    auto width = mCellSize * mWorld.getWidth();
+    auto height = mCellSize * mWorld.getHeight();
 
 
     // Triangles
-    for (size_t y=0;  y < world.getHeight();  ++y)
-    for (size_t x=0;  x < world.getWidth();  ++x) {
-        triangles.append(sf::Vertex(sf::Vector2f( x * cellSize, y * cellSize )));
-        triangles.append(sf::Vertex(sf::Vector2f( x * cellSize + cellSize, y * cellSize )));
-        triangles.append(sf::Vertex(sf::Vector2f( x * cellSize, y * cellSize + cellSize )));
-        triangles.append(sf::Vertex(sf::Vector2f( x * cellSize, y * cellSize + cellSize )));
-        triangles.append(sf::Vertex(sf::Vector2f( x * cellSize + cellSize, y * cellSize )));
-        triangles.append(sf::Vertex(sf::Vector2f( x * cellSize + cellSize, y * cellSize + cellSize )));
+    for (size_t y=0;  y < mWorld.getHeight();  ++y)
+    for (size_t x=0;  x < mWorld.getWidth();  ++x) {
+        mTriangles.append(sf::Vertex(sf::Vector2f( x * mCellSize, y * mCellSize )));
+        mTriangles.append(sf::Vertex(sf::Vector2f( x * mCellSize + mCellSize, y * mCellSize )));
+        mTriangles.append(sf::Vertex(sf::Vector2f( x * mCellSize, y * mCellSize + mCellSize )));
+        mTriangles.append(sf::Vertex(sf::Vector2f( x * mCellSize, y * mCellSize + mCellSize )));
+        mTriangles.append(sf::Vertex(sf::Vector2f( x * mCellSize + mCellSize, y * mCellSize )));
+        mTriangles.append(sf::Vertex(sf::Vector2f( x * mCellSize + mCellSize, y * mCellSize + mCellSize )));
     }
 
 
     // Vertical lines
-    for (size_t i=0;  i < world.getWidth() + 1;  ++i) {
-        lines.append(sf::Vertex(sf::Vector2f(i * cellSize, 0)));
-        lines.append(sf::Vertex(sf::Vector2f(i * cellSize, height)));
+    for (size_t i=0;  i < mWorld.getWidth() + 1;  ++i) {
+        mLines.append(sf::Vertex(sf::Vector2f(i * mCellSize, 0)));
+        mLines.append(sf::Vertex(sf::Vector2f(i * mCellSize, height)));
     }
 
     // Horizontal lines
-    for (size_t i=0;  i < world.getHeight() + 1;  ++i) {
-        lines.append(sf::Vertex(sf::Vector2f(0, i * cellSize)));
-        lines.append(sf::Vertex(sf::Vector2f(width, i * cellSize)));
+    for (size_t i=0;  i < mWorld.getHeight() + 1;  ++i) {
+        mLines.append(sf::Vertex(sf::Vector2f(0, i * mCellSize)));
+        mLines.append(sf::Vertex(sf::Vector2f(width, i * mCellSize)));
     }
 
 
     // Default empty cells color
-    for (size_t i=0;  i < triangles.getVertexCount();  ++i)
-        triangles[i].color = this->noCell_col;
+    for (size_t i=0;  i < mTriangles.getVertexCount();  ++i)
+        mTriangles[i].color = this->mNoCellColor;
 
-    // Default lines color
-    for (size_t i=0;  i < lines.getVertexCount();  ++i)
-        lines[i].color = lines_col;
+    // Default mLines color
+    for (size_t i=0;  i < mLines.getVertexCount();  ++i)
+        mLines[i].color = mLinesColor;
 
 }
 
@@ -80,14 +80,14 @@ WorldRenderer(const World& w, float cellSize)
 ////////////////////////////////////////////////////////////////
 const sf::FloatRect&        WorldRenderer::
 getBounds() const {
-    return this->bounds;
+    return this->mBounds;
 }
 
 
 
 const float&                WorldRenderer::
 getCellSize() const {
-    return this->cellSize;
+    return this->mCellSize;
 }
 
 
@@ -98,7 +98,7 @@ getCellSize() const {
 ////////////////////////////////////////////////////////////////
 void        WorldRenderer::
 drawLines(bool b) {
-    this->drawLines_b = b;
+    this->mDoDrawLines = b;
 }
 
 
@@ -108,22 +108,22 @@ drawLines(bool b) {
 //  SET COLORS
 ////////////////////////////////////////////////////////////////
 void        WorldRenderer::
-noCellColor(const sf::Color& c) {
-    this->noCell_col = c;
+noCellColor(const sf::Color& color) {
+    this->mNoCellColor = color;
     this->update();
 }
 
 
 void        WorldRenderer::
-aliveCellColor(const sf::Color& c) {
-    this->aliveCell_col = c;
+aliveCellColor(const sf::Color& color) {
+    this->mAliveCellColor = color;
     this->update();
 }
 
 
 void        WorldRenderer::
-visitedCellColor(const sf::Color& c) {
-    this->visitedCell_col = c;
+visitedCellColor(const sf::Color& color) {
+    this->mVisitedCellColor = color;
     this->update();
 }
 
@@ -131,8 +131,8 @@ visitedCellColor(const sf::Color& c) {
 
 void        WorldRenderer::
 linesColor(const sf::Color& color) {
-    for (size_t i=0;  i < lines.getVertexCount();  ++i)
-        lines[i].color = color;
+    for (size_t i=0;  i < mLines.getVertexCount();  ++i)
+        mLines[i].color = color;
 }
 
 
@@ -144,7 +144,7 @@ linesColor(const sf::Color& color) {
 ////////////////////////////////////////////////////////////////
 sf::Vertex*        WorldRenderer::
 getCellPoint(size_t n) {
-    return &(this->triangles[n * 6]);
+    return &(this->mTriangles[n * 6]);
 }
 
 
@@ -156,7 +156,7 @@ getCellPoint(size_t n) const {
 
 sf::Vertex*        WorldRenderer::
 getCellPointAt(size_t x, size_t y) {
-    return &(this->triangles[this->world.getWidth()  * y + x]);
+    return &(this->mTriangles[this->mWorld.getWidth()  * y + x]);
 }
 
 
@@ -176,15 +176,15 @@ void                    WorldRenderer::
 update()
 {
     size_t i = 0;
-    for ( const Cell& cell : this->world )
+    for ( const Cell& cell : this->mWorld )
     {
         sf::Vertex* originPoint = this->getCellPoint(i);
-        sf::Color color = this->noCell_col;
+        sf::Color color = this->mNoCellColor;
 
         if ( cell.isAlive() )
-            color = this->aliveCell_col;
+            color = this->mAliveCellColor;
         else if ( cell.wasVisited() )
-            color = this->visitedCell_col;
+            color = this->mVisitedCellColor;
 
         if ( originPoint->color != color ) {
             originPoint->color = color;
@@ -210,8 +210,8 @@ sf::Vector2<size_t>                WorldRenderer::
 graphicsToDataCoords(const sf::Vector2f& coords) const
 {
     return {
-        static_cast<size_t>(std::floor(coords.x / cellSize)),
-        static_cast<size_t>(std::floor(coords.y / cellSize))
+        static_cast<size_t>(std::floor(coords.x / mCellSize)),
+        static_cast<size_t>(std::floor(coords.y / mCellSize))
     };
 }
 
@@ -220,5 +220,6 @@ graphicsToDataCoords(const sf::Vector2f& coords) const
 size_t                          WorldRenderer::
 graphicsCoordsToCellNumber(const sf::Vector2f& coords) const {
     auto c = this->graphicsToDataCoords(coords);
-    return world.getWidth() * c.y + c.x;
+    return mWorld.getWidth() * c.y + c.x;
 }
+

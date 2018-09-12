@@ -269,7 +269,7 @@ int main(int argc, char** argv)
                         {
                             if ( worldBounds.contains({x, y}) ) {
                                 auto cellN = worldRenderer.graphicsCoordsToCellNumber({x, y});
-                                sf::Vector2f upLeftPoint = (worldRenderer.getCellPoint(cellN))->position;
+                                sf::Vector2f upLeftPoint = worldRenderer.getCellPoint(cellN)->position;
                                 sf::Vector2f downRightPoint = { upLeftPoint.x + cellSize, upLeftPoint.y + cellSize };
                                 if ( world[cellN].isAlive() )
                                     world[cellN].toggleEdit();

@@ -11,10 +11,10 @@ using std::size_t;
 
 class World
 {
-    std::vector<Cell>       cells;
-    size_t                  width;
-    size_t                  height;
-    
+    std::vector<Cell>       mCells;
+    size_t                  mWidth;
+    size_t                  mHeight;
+
 
 public:
     World(size_t w, size_t h);
@@ -31,8 +31,8 @@ public:
 
 
     // --- Access cell by number
-    Cell&       operator[](size_t i)            { return this->cells[i]; }
-    const Cell& operator[](size_t i) const      { return this->cells[i]; }
+    Cell&       operator[](size_t i)            { return this->mCells[i]; }
+    const Cell& operator[](size_t i) const      { return this->mCells[i]; }
 
 
     // --- Access cell by coordinates,
@@ -41,11 +41,11 @@ public:
     const Cell& operator()(int, int) const;
 
 
-    // --- Iterators on cells
-    auto begin() noexcept                       {  return this->cells.begin();   } 
-    auto end()  noexcept                        {  return this->cells.end();     }
-    const auto begin() const noexcept           {  return this->cells.begin();   } 
-    const auto end() const noexcept             {  return this->cells.end();     }
+    // --- Iterators on mCells
+    auto begin() noexcept                       {  return this->mCells.begin();   }
+    auto end()  noexcept                        {  return this->mCells.end();     }
+    const auto begin() const noexcept           {  return this->mCells.begin();   }
+    const auto end() const noexcept             {  return this->mCells.end();     }
 
 
 };
