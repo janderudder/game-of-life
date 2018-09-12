@@ -11,20 +11,20 @@ class Form
     , public sf::Transformable
 {
 protected:
-    bool                    displayed;
+    bool    mIsDisplayed;
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates) const = 0;
 
 public:
-    explicit Form(bool display = false) noexcept : displayed { display } { }
+    explicit Form(bool display = false) noexcept : mIsDisplayed { display } { }
     virtual ~Form() { }
 
-    void setDisplay(bool b)     { this->displayed = b;      }
-    void display()              { this->displayed = true;   }
-    void hide()                 { this->displayed = false;  }
-    void toggleDisplay()        { this->displayed = ! this->displayed; }
+    void setDisplay(bool b)             { mIsDisplayed = b;      }
+    void display()                      { mIsDisplayed = true;   }
+    void hide()                         { mIsDisplayed = false;  }
+    void toggleDisplay()                { mIsDisplayed = !mIsDisplayed; }
 
-    bool isDisplayed() const    { return this->displayed; }
+    inline bool isDisplayed() const     { return mIsDisplayed; }
 
     virtual const sf::FloatRect  getLocalBounds() const = 0;
     virtual sf::FloatRect        getGlobalBounds() const = 0;

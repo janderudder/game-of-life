@@ -12,48 +12,48 @@
 class QuitConfirm
     : public Form
 {
-    sf::RectangleShape          rect        =   sf::RectangleShape();
-    sf::Text                    text        =   sf::Text();
-    const sf::Font&             font;
+    sf::RectangleShape          mRect        =   sf::RectangleShape();
+    sf::Text                    mText        =   sf::Text();
+    const sf::Font&             mFont;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override {
-        if ( this->displayed ) {
+        if ( this->isDisplayed() ) {
             states.transform *= this->getTransform();
-            target.draw(this->rect, states);
-            target.draw(this->text, states);
+            target.draw(mRect, states);
+            target.draw(mText, states);
         }
     }
 
 public:
     explicit QuitConfirm(const sf::Font& aFont) noexcept
-        : font  ( aFont )
+        : mFont  ( aFont )
     {
-        this->rect.setOutlineThickness(6.f);
-        this->rect.setSize(sf::Vector2f(512 - rect.getOutlineThickness() * 2, 256 - rect.getOutlineThickness() * 2));
-        this->rect.setOutlineColor(sf::Color::Black);
-        this->rect.setFillColor(sf::Color::White);
+        mRect.setOutlineThickness(6.f);
+        mRect.setSize(sf::Vector2f(512 - mRect.getOutlineThickness() * 2, 256 - mRect.getOutlineThickness() * 2));
+        mRect.setOutlineColor(sf::Color::Black);
+        mRect.setFillColor(sf::Color::White);
 
-        this->setOrigin(-rect.getOutlineThickness(), -rect.getOutlineThickness());
+        this->setOrigin(-mRect.getOutlineThickness(), -mRect.getOutlineThickness());
 
-        this->text.setFont(this->font);
-        this->text.setCharacterSize(22);
-        this->text.setFillColor(sf::Color::Black);
-        this->text.setString("Press Enter to quit.");
+        mText.setFont(this->mFont);
+        mText.setCharacterSize(22);
+        mText.setFillColor(sf::Color::Black);
+        mText.setString("Press Enter to quit.");
 
-        this->text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
-        this->text.setPosition( rect.getSize() / 2.f );
+        mText.setOrigin(mText.getLocalBounds().width / 2.f, mText.getLocalBounds().height / 2.f);
+        mText.setPosition( mRect.getSize() / 2.f );
     }
 
 
     virtual const sf::FloatRect getLocalBounds() const override
     {
-        return this->rect.getLocalBounds();
+        return mRect.getLocalBounds();
     }
 
 
     virtual sf::FloatRect getGlobalBounds() const override
     {
-        return this->getTransform().transformRect(this->rect.getLocalBounds());
+        return this->getTransform().transformRect(this->mRect.getLocalBounds());
     }
 
 

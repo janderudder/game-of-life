@@ -33,12 +33,12 @@ World(size_t squareWorldSideSize)
 void World::
 computeNextState()
 {
-    auto nextState(this->mCells);    // Copy world data array
-    auto cellCount = this->mCells.size();
+    auto nextState(mCells);    // Copy world data array
+    auto cellCount = mCells.size();
 
 
-    for ( int h=0;  (size_t)h < this->mHeight;  ++h )
-    for ( int w=0;  (size_t)w < this->mWidth;  ++w )
+    for ( int h=0;  (size_t)h < mHeight;  ++h )
+    for ( int w=0;  (size_t)w < mWidth;  ++w )
     {
         uint8_t aliveNeighbors = 0;
 
@@ -63,7 +63,7 @@ computeNextState()
 
         // We got the number of alive neighbors,
         // determine the cell's next state.
-        size_t cell = this->mWidth * h + w;
+        size_t cell = mWidth * h + w;
         if ( aliveNeighbors == 3 ) {
             nextState[cell].live();
         }
@@ -74,7 +74,7 @@ computeNextState()
     }
 
     // Now that the new state is computed, make it the current one
-    std::swap(this->mCells, nextState);
+    std::swap(mCells, nextState);
 
 }
 
@@ -86,13 +86,13 @@ computeNextState()
 ////////////////////////////////////////////////////////////////
 const size_t&      World::
 getWidth() const {
-    return this->mWidth;
+    return mWidth;
 }
 
 
 const size_t&      World::
 getHeight() const {
-    return this->mHeight;
+    return mHeight;
 }
 
 
@@ -102,17 +102,17 @@ getHeight() const {
 ////////////////////////////////////////////////////////////////
 Cell&               World::
 operator()(int x, int y) {
-    if ( x >= (int)this->mWidth )
-        x -= (int)this->mWidth;
+    if ( x >= (int)mWidth )
+        x -= (int)mWidth;
     else if ( x < 0 )
-        x += (int)this->mWidth;
+        x += (int)mWidth;
 
-    if ( y >= (int)this->mHeight )
-        y -= (int)this->mHeight;
+    if ( y >= (int)mHeight )
+        y -= (int)mHeight;
     else if ( y < 0 )
-        y += (int)this->mHeight;
+        y += (int)mHeight;
 
-    return this->mCells[this->mWidth * y + x];
+    return mCells[mWidth * y + x];
 }
 
 

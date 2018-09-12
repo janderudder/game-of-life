@@ -5,7 +5,7 @@ void
 Cursor::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     if ( mDrawCrosshair )
-        target.draw(this->mCrosshairSprite);
+        target.draw(mCrosshairSprite);
 }
 
 
@@ -14,12 +14,12 @@ Cursor::draw(sf::RenderTarget& target, sf::RenderStates states) const
 Cursor::Cursor(sf::RenderWindow& window) noexcept
     : mWindow   { window }
 {
-    this->mCrosshairSprite.setOrigin(
+    mCrosshairSprite.setOrigin(
         mCrosshairSprite.getLocalBounds().width / 2.f
         , mCrosshairSprite.getLocalBounds().height / 2.f
     );
 
-    this->mCrosshairSprite.scale(.5f, .5f);
+    mCrosshairSprite.scale(.5f, .5f);
 }
 
 
@@ -45,5 +45,5 @@ Cursor::setMode(Mode mode)
 void
 Cursor::onWindowResize(const sf::Vector2u& size)
 {
-    this->mCrosshairSprite.setPosition( static_cast<sf::Vector2f>(size) / 2.f );
+    mCrosshairSprite.setPosition( static_cast<sf::Vector2f>(size) / 2.f );
 }

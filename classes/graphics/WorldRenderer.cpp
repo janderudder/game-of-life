@@ -16,7 +16,7 @@ draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(mTriangles, states);
 
-    if ( this->mDoDrawLines )
+    if ( mDoDrawLines )
         target.draw(mLines, states);
 }
 
@@ -64,7 +64,7 @@ WorldRenderer(const World& w, float cellSize)
 
     // Default empty cells color
     for (size_t i=0;  i < mTriangles.getVertexCount();  ++i)
-        mTriangles[i].color = this->mNoCellColor;
+        mTriangles[i].color = mNoCellColor;
 
     // Default mLines color
     for (size_t i=0;  i < mLines.getVertexCount();  ++i)
@@ -80,14 +80,14 @@ WorldRenderer(const World& w, float cellSize)
 ////////////////////////////////////////////////////////////////
 const sf::FloatRect&        WorldRenderer::
 getBounds() const {
-    return this->mBounds;
+    return mBounds;
 }
 
 
 
 const float&                WorldRenderer::
 getCellSize() const {
-    return this->mCellSize;
+    return mCellSize;
 }
 
 
@@ -98,7 +98,7 @@ getCellSize() const {
 ////////////////////////////////////////////////////////////////
 void        WorldRenderer::
 drawLines(bool b) {
-    this->mDoDrawLines = b;
+    mDoDrawLines = b;
 }
 
 
@@ -109,21 +109,21 @@ drawLines(bool b) {
 ////////////////////////////////////////////////////////////////
 void        WorldRenderer::
 noCellColor(const sf::Color& color) {
-    this->mNoCellColor = color;
+    mNoCellColor = color;
     this->update();
 }
 
 
 void        WorldRenderer::
 aliveCellColor(const sf::Color& color) {
-    this->mAliveCellColor = color;
+    mAliveCellColor = color;
     this->update();
 }
 
 
 void        WorldRenderer::
 visitedCellColor(const sf::Color& color) {
-    this->mVisitedCellColor = color;
+    mVisitedCellColor = color;
     this->update();
 }
 
@@ -144,7 +144,7 @@ linesColor(const sf::Color& color) {
 ////////////////////////////////////////////////////////////////
 sf::Vertex*        WorldRenderer::
 getCellPoint(size_t n) {
-    return &(this->mTriangles[n * 6]);
+    return &(mTriangles[n * 6]);
 }
 
 
@@ -156,7 +156,7 @@ getCellPoint(size_t n) const {
 
 sf::Vertex*        WorldRenderer::
 getCellPointAt(size_t x, size_t y) {
-    return &(this->mTriangles[this->mWorld.getWidth()  * y + x]);
+    return &(mTriangles[mWorld.getWidth()  * y + x]);
 }
 
 
@@ -176,15 +176,15 @@ void                    WorldRenderer::
 update()
 {
     size_t i = 0;
-    for ( const Cell& cell : this->mWorld )
+    for ( const Cell& cell : mWorld )
     {
         sf::Vertex* originPoint = this->getCellPoint(i);
-        sf::Color color = this->mNoCellColor;
+        sf::Color color = mNoCellColor;
 
         if ( cell.isAlive() )
-            color = this->mAliveCellColor;
+            color = mAliveCellColor;
         else if ( cell.wasVisited() )
-            color = this->mVisitedCellColor;
+            color = mVisitedCellColor;
 
         if ( originPoint->color != color ) {
             originPoint->color = color;

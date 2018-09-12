@@ -14,8 +14,8 @@ public:
     explicit Cell(bool mIsAlive = false) noexcept;
 
     // --- States access
-    const bool& isAlive() const         { return this->mIsAlive; }
-    const bool& wasVisited() const      { return this->mIsVisited; }
+    const bool& isAlive() const         { return mIsAlive; }
+    const bool& wasVisited() const      { return mIsVisited; }
 
     void live();
     void die();

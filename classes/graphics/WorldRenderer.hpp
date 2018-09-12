@@ -15,13 +15,13 @@ class WorldRenderer
     World const&        mWorld;
     float               mCellSize;
     sf::FloatRect       mBounds;
-    sf::VertexArray     mLines               =   sf::VertexArray(sf::PrimitiveType::Lines);
-    sf::VertexArray     mTriangles           =   sf::VertexArray(sf::PrimitiveType::Triangles);
-    bool                mDoDrawLines         =   true;
-    sf::Color           mNoCellColor          =   sf::Color::Transparent;
-    sf::Color           mAliveCellColor       =   sf::Color::Black;
-    sf::Color           mVisitedCellColor     =   sf::Color(255, 231, 158);
-    sf::Color           mLinesColor           =   sf::Color(158, 150, 150);
+    sf::VertexArray     mLines              =   sf::VertexArray(sf::PrimitiveType::Lines);
+    sf::VertexArray     mTriangles          =   sf::VertexArray(sf::PrimitiveType::Triangles);
+    bool                mDoDrawLines        =   true;
+    sf::Color           mNoCellColor        =   sf::Color::Transparent;
+    sf::Color           mAliveCellColor     =   sf::Color::Black;
+    sf::Color           mVisitedCellColor   =   sf::Color(255, 231, 158);
+    sf::Color           mLinesColor         =   sf::Color(158, 150, 150);
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates = sf::RenderStates::Default) const override;
 

@@ -17,29 +17,29 @@ Cell(bool isAlive) noexcept
 
 void        Cell::
 live() {
-    this->mIsAlive = true;
-    this->mIsVisited = true;
+    mIsAlive = true;
+    mIsVisited = true;
 }
 
 
 void        Cell::
 die() {
-    if ( this->mIsAlive )
-        this->mIsVisited = true;
-    this->mIsAlive = false;
+    if ( mIsAlive )
+        mIsVisited = true;
+    mIsAlive = false;
 }
 
 
 
 void        Cell::
 visit() {
-    this->mIsVisited = true;
+    mIsVisited = true;
 }
 
 
 
 void        Cell::
 toggleEdit() {
-    this->mIsAlive = !this->mIsAlive;
+    mIsAlive = !mIsAlive;
 }
 

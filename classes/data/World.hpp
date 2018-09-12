@@ -31,8 +31,8 @@ public:
 
 
     // --- Access cell by number
-    Cell&       operator[](size_t i)            { return this->mCells[i]; }
-    const Cell& operator[](size_t i) const      { return this->mCells[i]; }
+    Cell&       operator[](size_t i)            { return mCells[i]; }
+    const Cell& operator[](size_t i) const      { return mCells[i]; }
 
 
     // --- Access cell by coordinates,
@@ -42,10 +42,10 @@ public:
 
 
     // --- Iterators on mCells
-    auto begin() noexcept                       {  return this->mCells.begin();   }
-    auto end()  noexcept                        {  return this->mCells.end();     }
-    const auto begin() const noexcept           {  return this->mCells.begin();   }
-    const auto end() const noexcept             {  return this->mCells.end();     }
+    auto begin() noexcept                       {  return mCells.begin();   }
+    auto end()  noexcept                        {  return mCells.end();     }
+    const auto begin() const noexcept           {  return mCells.begin();   }
+    const auto end() const noexcept             {  return mCells.end();     }
 
 
 };

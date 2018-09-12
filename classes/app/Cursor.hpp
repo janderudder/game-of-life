@@ -14,7 +14,7 @@ class Cursor
 {
     sf::RenderWindow&   mWindow;
     Texture             mCrosshairTexture           =   makeResource<sf::Texture>(ProjectPath::Get("resources/images/crosshair.png"));
-    sf::Sprite          mCrosshairSprite            =   sf::Sprite(*this->mCrosshairTexture);
+    sf::Sprite          mCrosshairSprite            =   sf::Sprite(*mCrosshairTexture);
     bool                mDrawCrosshair              =   false;
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates = sf::RenderStates::Default) const override;
@@ -29,7 +29,7 @@ public:
     void setMode(Mode);
     void onWindowResize(const sf::Vector2u&);
 
-    Mode getMode() const                    { return this->mDrawCrosshair ? Mode::Crosshair : Mode::Normal; }
+    Mode getMode() const                    { return mDrawCrosshair ? Mode::Crosshair : Mode::Normal; }
 
 };
 
