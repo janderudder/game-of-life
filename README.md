@@ -2,7 +2,7 @@
 Yet another implemantation of Conway's Game of Life cellular automaton.
 With C++17 and the great SFML library.
 
-![Demo gif](https://assets.futuredevs.xyz/img/github/automaton/automaton.gif)
+![Demo gif](https://user-images.githubusercontent.com/39810873/49385108-dd5ffb00-f71c-11e8-8dc0-83b3e2fcf218.gif)
 
 
 ## Compilation
